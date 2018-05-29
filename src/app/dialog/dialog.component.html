@@ -1,0 +1,8 @@
+<p>New task</p>
+<mat-form-field>
+  <input matInput placeholder="Add task" [value]="value" #taskName>
+</mat-form-field>
+<div>
+  <button mat-raised-button (click)="closeDialog({ choose: true, name: taskName.value })">Add</button>
+  <button mat-raised-button (click)="closeDialog({ choose: false })">Cancel</button>
+</div>
