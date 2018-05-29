@@ -6,8 +6,10 @@
         *ngFor="let task of taskList"
       >
         <p class="task-name" [class.completed]="task.completed" (click)="toggleStatus(task.name)">{{ task.name }}</p>
-        <button mat-mini-fab (click)="deleteTask(task.name)">Delete</button>
-        <button mat-mini-fab (click)="updateTask(task.name)">Update</button>
+        <mat-card-actions>
+          <button mat-mini-fab (click)="updateTask(task.name)" [disabled]="task.completed"><mat-icon>edit</mat-icon></button>
+          <button mat-mini-fab (click)="deleteTask(task.name)"><mat-icon>delete</mat-icon></button>
+        </mat-card-actions>
       </mat-list-item>
     </mat-list>
     <button mat-raised-button (click)="addTask()">Add task</button>
