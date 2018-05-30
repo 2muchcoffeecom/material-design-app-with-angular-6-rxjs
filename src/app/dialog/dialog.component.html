@@ -1,8 +1,18 @@
-<p>New task</p>
+<h3>My buy</h3>
 <mat-form-field>
-  <input matInput placeholder="Add task" [value]="value" #taskName>
+  <input matInput placeholder="Task name" [value]="name" #buyName>
 </mat-form-field>
 <div>
-  <button mat-raised-button (click)="closeDialog({ choose: true, name: taskName.value })">Add</button>
-  <button mat-raised-button (click)="closeDialog({ choose: false })">Cancel</button>
+  <button
+    mat-raised-button
+    (click)="closeDialog({ choose: true, name: buyName.value })"
+  >
+    Ok
+  </button>
+  <button
+    mat-raised-button
+    (click)="closeDialog({ choose: false })"
+  >
+    Cancel
+  </button>
 </div>

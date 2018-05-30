@@ -4,10 +4,9 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 @Component({
   selector: 'app-dialog',
   templateUrl: './dialog.component.html',
-  styleUrls: ['./dialog.component.css']
 })
 export class DialogComponent implements OnInit {
-  value: string;
+  name: string;
 
   constructor(
     public dialogRef: MatDialogRef<DialogComponent>,
@@ -15,10 +14,10 @@ export class DialogComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.value = this.data.name;
+    this.name = this.data.name;
   }
 
   closeDialog(data) {
-    this.dialogRef.close({ ...data, oldName: this.value });
+    this.dialogRef.close({ ...data, oldName: this.name });
   }
 }

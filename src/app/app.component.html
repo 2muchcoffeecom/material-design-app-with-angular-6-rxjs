@@ -1,17 +1,48 @@
 <mat-card>
-  <mat-card-header>My tasks</mat-card-header>
+  <mat-card-title>My shopping list</mat-card-title>
   <mat-card-content>
     <mat-list>
       <mat-list-item
-        *ngFor="let task of taskList"
+        *ngFor="let buy of shoppingList; let i = index"
       >
-        <p class="task-name" [class.completed]="task.completed" (click)="toggleStatus(task.name)">{{ task.name }}</p>
-        <mat-card-actions>
-          <button mat-mini-fab (click)="updateTask(task.name)" [disabled]="task.completed"><mat-icon>edit</mat-icon></button>
-          <button mat-mini-fab (click)="deleteTask(task.name)"><mat-icon>delete</mat-icon></button>
-        </mat-card-actions>
+        <p>{{ i+1 }}.</p>
+        <p
+          class="buy-name"
+          [class.completed]="buy.completed"
+          (click)="toggleStatus(buy.name)"
+        >
+          {{ buy.name }}
+        </p>
+        <div>
+          <button
+            class="action"
+            color="primary"
+            mat-mini-fab
+            (click)="update(buy.name)"
+            [disabled]="buy.completed"
+          >
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button
+            class="action"
+            color="warn"
+            mat-mini-fab
+            (click)="delete(buy.name)"
+          >
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+        <mat-divider></mat-divider>
       </mat-list-item>
     </mat-list>
-    <button mat-raised-button (click)="addTask()">Add task</button>
   </mat-card-content>
+  <mat-card-actions>
+    <button
+      mat-raised-button
+      color="primary"
+      (click)="add()"
+    >
+      Add buy
+    </button>
+  </mat-card-actions>
 </mat-card>

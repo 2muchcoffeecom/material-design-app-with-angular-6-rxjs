@@ -2,6 +2,10 @@
   text-decoration: line-through;
 }
 
-.task-name {
+.buy-name {
   cursor: pointer;
+}
+
+.action {
+  margin-left: 10px;
 }

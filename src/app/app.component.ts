@@ -1,8 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material';
 
-import {ConnectableObservable, Observable, of, Subject} from "rxjs/index";
-import {filter, map, publish, switchMap, tap, withLatestFrom} from "rxjs/internal/operators";
+import { Subject, Subscription } from 'rxjs/index';
+import { filter, switchMap } from 'rxjs/internal/operators';
 
 import { DialogComponent } from './dialog/dialog.component';
 
@@ -11,74 +11,75 @@ import { DialogComponent } from './dialog/dialog.component';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
-  taskList: { name: string; completed: boolean }[] = [];
-  addTask$: Subject<any> = new Subject<any>();
-  deleteTask$: Subject<string> = new Subject<string>();
+export class AppComponent implements OnDestroy {
+  shoppingList: { name: string; completed: boolean }[] = [];
+
+  addOrUpdate$: Subject<string> = new Subject<string>();
+  delete$: Subject<string> = new Subject<string>();
   toggleStatus$: Subject<string> = new Subject<string>();
-  updateTask$: Subject<string> = new Subject<string>();
+
+  addOrUpdateSubscription: Subscription;
+  deleteSubscription: Subscription;
+  updateSubscription: Subscription;
 
   constructor(
     private dialog: MatDialog,
   ) {
-    this.addTask$.pipe(
-      switchMap(() => {
-        const dialogRef = this.dialog.open(DialogComponent, {
-          data: { name: '' },
-        });
-        return dialogRef.afterClosed();
-      }),
-      filter((data) => data.choose),
-    )
-    .subscribe((data) => {
-      this.taskList.push({ name: data.name, completed: false });
-    });
-
-    this.deleteTask$
-    .subscribe((name => {
-      this.taskList = this.taskList.filter((task) => task.name !== name);
-    }));
-
-    this.toggleStatus$
-    .subscribe((name => {
-      this.taskList.map((task) => {
-        if (task.name === name) {
-          task.completed = !task.completed;
-        }
-      });
-    }));
-
-    this.updateTask$.pipe(
-      switchMap((name) => {
+    this.addOrUpdateSubscription = this.addOrUpdate$.pipe(
+      switchMap((name = '') => {
         const dialogRef = this.dialog.open(DialogComponent, {
           data: { name },
         });
         return dialogRef.afterClosed();
       }),
-      filter((data) => data.choose),
+      filter((data) => data.name && data.choose),
     )
     .subscribe((data) => {
-      this.taskList.map((task) => {
-        if (task.name === data.oldName) {
-          task.name = data.name;
+      if (data.oldName) {
+        this.shoppingList.map((buy) => {
+          if (buy.name === data.oldName) {
+            buy.name = data.name;
+          }
+        });
+      } else {
+        this.shoppingList.push({ name: data.name, completed: false });
+      }
+    });
+
+    this.deleteSubscription = this.delete$
+    .subscribe((name => {
+      this.shoppingList = this.shoppingList.filter((buy) => buy.name !== name);
+    }));
+
+    this.updateSubscription = this.toggleStatus$
+    .subscribe((name => {
+      this.shoppingList.map((buy) => {
+        if (buy.name === name) {
+          buy.completed = !buy.completed;
         }
       });
-    });
+    }));
   }
 
-  addTask() {
-    this.addTask$.next();
+  ngOnDestroy() {
+    this.addOrUpdateSubscription.unsubscribe();
+    this.deleteSubscription.unsubscribe();
+    this.updateSubscription.unsubscribe();
   }
 
-  deleteTask(name: string) {
-    this.deleteTask$.next(name);
+  add() {
+    this.addOrUpdate$.next();
+  }
+
+  delete(name: string) {
+    this.delete$.next(name);
   }
 
   toggleStatus(name: string) {
     this.toggleStatus$.next(name);
   }
 
-  updateTask(name: string) {
-    this.updateTask$.next(name);
+  update(name: string) {
+    this.addOrUpdate$.next(name);
   }
 }

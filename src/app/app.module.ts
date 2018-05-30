@@ -7,11 +7,11 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
+import { MatDividerModule } from '@angular/material/divider';
 
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DialogComponent } from './dialog/dialog.component';
-
 
 
 @NgModule({
@@ -29,6 +29,7 @@ import { DialogComponent } from './dialog/dialog.component';
     MatDialogModule,
     MatInputModule,
     MatIconModule,
+    MatDividerModule,
   ],
   providers: [
 
