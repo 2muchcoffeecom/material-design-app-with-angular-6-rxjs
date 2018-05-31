@@ -6,13 +6,18 @@ import { filter, switchMap } from 'rxjs/internal/operators';
 
 import { DialogComponent } from './dialog/dialog.component';
 
+export interface Buy {
+  name: string;
+  completed: boolean;
+}
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnDestroy {
-  shoppingList: { name: string; completed: boolean }[] = [];
+  shoppingList: Buy[] = [];
 
   addOrUpdate$: Subject<string> = new Subject<string>();
   delete$: Subject<string> = new Subject<string>();
@@ -32,7 +37,7 @@ export class AppComponent implements OnDestroy {
         });
         return dialogRef.afterClosed();
       }),
-      filter((data) => data.name && data.choose),
+      filter((data) => data && data.name && data.choose),
     )
     .subscribe((data) => {
       if (data.oldName) {
