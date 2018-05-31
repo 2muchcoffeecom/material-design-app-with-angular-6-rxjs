@@ -41,9 +41,9 @@ export class AppComponent implements OnDestroy {
       }),
       filter((data) => data && data.name.trim() && data.choose),
       withLatestFrom(this.shoppingList$),
-      map(([data, shoppingList]) =>
-          shoppingList.push({ name: data.name, completed: false })
-      ),
+      map(([data, shoppingList]) => {
+          shoppingList.push({ name: data.name, completed: false });
+      }),
     )
     .subscribe();
 
@@ -56,25 +56,25 @@ export class AppComponent implements OnDestroy {
       }),
       filter((data) => data && data.name.trim() && data.choose),
       withLatestFrom(this.shoppingList$),
-      map(([data, shoppingList]) =>
-        shoppingList[data.index].name = data.name
-      ),
+      map(([data, shoppingList]) => {
+        shoppingList[data.index].name = data.name;
+      }),
     )
     .subscribe();
 
     this.deleteSubscription = this.delete$.pipe(
       withLatestFrom(this.shoppingList$),
-      map(([index, shoppingList]) =>
-        shoppingList.splice(index, 1)
-      ),
+      map(([index, shoppingList]) => {
+        shoppingList.splice(index, 1);
+      }),
     )
     .subscribe();
 
     this.toggleStatusSubscription = this.toggleStatus$.pipe(
       withLatestFrom(this.shoppingList$),
-      map(([index, shoppingList]) =>
-        shoppingList[index].completed = !shoppingList[index].completed
-      ),
+      map(([index, shoppingList]) => {
+        shoppingList[index].completed = !shoppingList[index].completed;
+      }),
     )
     .subscribe();
   }
