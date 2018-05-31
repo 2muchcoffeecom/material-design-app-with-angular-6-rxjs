@@ -18,6 +18,6 @@ export class DialogComponent implements OnInit {
   }
 
   closeDialog(data) {
-    this.dialogRef.close({ ...data, oldName: this.name });
+    this.dialogRef.close({ ...data, index: this.data.index });
   }
 }

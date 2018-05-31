@@ -1,8 +1,8 @@
 import { Component, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material';
 
-import { Subject, Subscription } from 'rxjs/index';
-import { filter, switchMap } from 'rxjs/internal/operators';
+import { Observable, Subject, Subscription, of } from 'rxjs/index';
+import { filter, switchMap, map, withLatestFrom } from 'rxjs/internal/operators';
 
 import { DialogComponent } from './dialog/dialog.component';
 
@@ -17,74 +17,88 @@ export interface Buy {
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnDestroy {
-  shoppingList: Buy[] = [];
+  shoppingList$: Observable<Buy[]> = of([]);
 
-  addOrUpdate$: Subject<string> = new Subject<string>();
-  delete$: Subject<string> = new Subject<string>();
-  toggleStatus$: Subject<string> = new Subject<string>();
+  add$: Subject<any> = new Subject<any>();
+  update$: Subject<any> = new Subject<any>();
+  delete$: Subject<any> = new Subject<any>();
+  toggleStatus$: Subject<any> = new Subject<any>();
 
-  addOrUpdateSubscription: Subscription;
-  deleteSubscription: Subscription;
+  addSubscription: Subscription;
   updateSubscription: Subscription;
+  deleteSubscription: Subscription;
+  toggleStatusSubscription: Subscription;
 
   constructor(
     private dialog: MatDialog,
   ) {
-    this.addOrUpdateSubscription = this.addOrUpdate$.pipe(
-      switchMap((name = '') => {
+    this.addSubscription = this.add$.pipe(
+      switchMap(() => {
         const dialogRef = this.dialog.open(DialogComponent, {
-          data: { name },
+          data: { name: '' },
         });
         return dialogRef.afterClosed();
       }),
-      filter((data) => data && data.name && data.choose),
+      filter((data) => data && data.name.trim() && data.choose),
+      withLatestFrom(this.shoppingList$),
+      map(([data, shoppingList]) =>
+          shoppingList.push({ name: data.name, completed: false })
+      ),
     )
-    .subscribe((data) => {
-      if (data.oldName) {
-        this.shoppingList.map((buy) => {
-          if (buy.name === data.oldName) {
-            buy.name = data.name;
-          }
+    .subscribe();
+
+    this.updateSubscription = this.update$.pipe(
+      switchMap((data) => {
+        const dialogRef = this.dialog.open(DialogComponent, {
+          data,
         });
-      } else {
-        this.shoppingList.push({ name: data.name, completed: false });
-      }
-    });
+        return dialogRef.afterClosed();
+      }),
+      filter((data) => data && data.name.trim() && data.choose),
+      withLatestFrom(this.shoppingList$),
+      map(([data, shoppingList]) =>
+        shoppingList[data.index].name = data.name
+      ),
+    )
+    .subscribe();
 
-    this.deleteSubscription = this.delete$
-    .subscribe((name => {
-      this.shoppingList = this.shoppingList.filter((buy) => buy.name !== name);
-    }));
+    this.deleteSubscription = this.delete$.pipe(
+      withLatestFrom(this.shoppingList$),
+      map(([index, shoppingList]) =>
+        shoppingList.splice(index, 1)
+      ),
+    )
+    .subscribe();
 
-    this.updateSubscription = this.toggleStatus$
-    .subscribe((name => {
-      this.shoppingList.map((buy) => {
-        if (buy.name === name) {
-          buy.completed = !buy.completed;
-        }
-      });
-    }));
+    this.toggleStatusSubscription = this.toggleStatus$.pipe(
+      withLatestFrom(this.shoppingList$),
+      map(([index, shoppingList]) =>
+        shoppingList[index].completed = !shoppingList[index].completed
+      ),
+    )
+    .subscribe();
   }
 
   ngOnDestroy() {
-    this.addOrUpdateSubscription.unsubscribe();
-    this.deleteSubscription.unsubscribe();
+    this.addSubscription.unsubscribe();
     this.updateSubscription.unsubscribe();
+    this.deleteSubscription.unsubscribe();
+    this.toggleStatusSubscription.unsubscribe();
   }
 
   add() {
-    this.addOrUpdate$.next();
+    this.add$.next();
   }
 
-  delete(name: string) {
-    this.delete$.next(name);
+  delete(index: number) {
+    this.delete$.next(index);
   }
 
-  toggleStatus(name: string) {
-    this.toggleStatus$.next(name);
+  toggleStatus(index: number) {
+    this.toggleStatus$.next(index);
   }
 
-  update(name: string) {
-    this.addOrUpdate$.next(name);
+  update(name: string, index: number) {
+    this.update$.next({ name, index });
   }
 }
