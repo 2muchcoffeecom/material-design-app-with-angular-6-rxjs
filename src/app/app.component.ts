@@ -19,10 +19,10 @@ export interface Buy {
 export class AppComponent implements OnDestroy {
   shoppingList$: Observable<Buy[]> = of([]);
 
-  add$: Subject<any> = new Subject<any>();
-  update$: Subject<any> = new Subject<any>();
-  delete$: Subject<any> = new Subject<any>();
-  toggleStatus$: Subject<any> = new Subject<any>();
+  add$: Subject<null> = new Subject<null>();
+  update$: Subject<{ name: string, index: number }> = new Subject<{ name: string, index: number }>();
+  delete$: Subject<number> = new Subject<number>();
+  toggleStatus$: Subject<number> = new Subject<number>();
 
   addSubscription: Subscription;
   updateSubscription: Subscription;
