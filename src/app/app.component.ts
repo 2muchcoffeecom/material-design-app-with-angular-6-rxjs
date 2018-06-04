@@ -45,7 +45,7 @@ export class AppComponent implements OnDestroy {
           shoppingList.push({ name: data.name, completed: false });
       }),
     )
-    .subscribe();
+    .subscribe(() => console.log('added'));
 
     this.updateSubscription = this.update$.pipe(
       switchMap((data) => {
@@ -60,7 +60,7 @@ export class AppComponent implements OnDestroy {
         shoppingList[data.index].name = data.name;
       }),
     )
-    .subscribe();
+    .subscribe(() => console.log('updated'));
 
     this.deleteSubscription = this.delete$.pipe(
       withLatestFrom(this.shoppingList$),
@@ -68,7 +68,7 @@ export class AppComponent implements OnDestroy {
         shoppingList.splice(index, 1);
       }),
     )
-    .subscribe();
+    .subscribe(() => console.log('deleted'));
 
     this.toggleStatusSubscription = this.toggleStatus$.pipe(
       withLatestFrom(this.shoppingList$),
@@ -76,7 +76,7 @@ export class AppComponent implements OnDestroy {
         shoppingList[index].completed = !shoppingList[index].completed;
       }),
     )
-    .subscribe();
+    .subscribe(() => console.log('toggled the status'));
   }
 
   ngOnDestroy() {
