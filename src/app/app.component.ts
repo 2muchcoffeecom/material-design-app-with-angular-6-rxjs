@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 
 import { Observable, Subject, Subscription, of } from 'rxjs/index';
@@ -16,7 +16,7 @@ export interface Buy {
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements OnDestroy {
+export class AppComponent implements OnInit, OnDestroy {
   shoppingList$: Observable<Buy[]> = of([]);
 
   add$: Subject<null> = new Subject<null>();
@@ -31,7 +31,9 @@ export class AppComponent implements OnDestroy {
 
   constructor(
     private dialog: MatDialog,
-  ) {
+  ) { }
+
+  ngOnInit() {
     this.addSubscription = this.add$.pipe(
       switchMap(() => {
         const dialogRef = this.dialog.open(DialogComponent, {
@@ -42,7 +44,7 @@ export class AppComponent implements OnDestroy {
       filter((data) => data && data.name.trim() && data.choose),
       withLatestFrom(this.shoppingList$),
       map(([data, shoppingList]) => {
-          shoppingList.push({ name: data.name, completed: false });
+        shoppingList.push({ name: data.name, completed: false });
       }),
     )
     .subscribe(() => console.log('added'));
