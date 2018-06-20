@@ -3,23 +3,23 @@
   <mat-card-content>
     <mat-list>
       <mat-list-item
-        *ngFor="let buy of shoppingList$ | async; let i = index"
+        *ngFor="let order of shoppingList$ | async; let i = index"
       >
         <p>{{ i+1 }}.</p>
         <p
-          class="buy-name"
-          [class.completed]="buy.completed"
+          class="order-name"
+          [class.completed]="order.completed"
           (click)="toggleStatus(i)"
         >
-          {{ buy.name }}
+          {{ order.name }}
         </p>
         <div>
           <button
             class="action"
             color="primary"
             mat-mini-fab
-            (click)="update(buy.name, i)"
-            [disabled]="buy.completed"
+            (click)="update(order.name, i)"
+            [disabled]="order.completed"
           >
             <mat-icon>edit</mat-icon>
           </button>
@@ -42,7 +42,7 @@
       color="primary"
       (click)="add()"
     >
-      Add buy
+      Add order
     </button>
   </mat-card-actions>
 </mat-card>

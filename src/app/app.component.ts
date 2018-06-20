@@ -6,7 +6,7 @@ import { filter, switchMap, map, withLatestFrom } from 'rxjs/internal/operators'
 
 import { DialogComponent } from './dialog/dialog.component';
 
-export interface Buy {
+export interface Order {
   name: string;
   completed: boolean;
 }
@@ -17,7 +17,7 @@ export interface Buy {
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit, OnDestroy {
-  shoppingList$: Observable<Buy[]> = of([]);
+  shoppingList$: Observable<Order[]> = of([]);
 
   add$: Subject<null> = new Subject<null>();
   update$: Subject<{ name: string, index: number }> = new Subject<{ name: string, index: number }>();

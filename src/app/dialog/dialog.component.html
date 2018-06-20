@@ -1,24 +1,24 @@
-<h3 mat-dialog-title>My buy</h3>
+<h3 mat-dialog-title>My order</h3>
 <mat-dialog-content>
   <mat-form-field>
     <input
       matInput
-      placeholder="Buy name"
-      [value]="name" #buyName
-      (keyup.enter)="closeDialog({ choose: true, name: buyName.value })"
+      placeholder="Order name"
+      [value]="name" #orderName
+      (keyup.enter)="closeDialog({ choose: true, name: orderName.value })"
     >
   </mat-form-field>
 </mat-dialog-content>
 <mat-dialog-actions>
   <button
     mat-raised-button
-    (click)="closeDialog({ choose: true, name: buyName.value })"
+    (click)="closeDialog({ choose: true, name: orderName.value })"
   >
     Ok
   </button>
   <button
     mat-raised-button
-    (click)="closeDialog({ choose: false, name: buyName.value })"
+    (click)="closeDialog({ choose: false, name: orderName.value })"
   >
     Cancel
   </button>
